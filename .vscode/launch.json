@@ -5,14 +5,16 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Deno: Run",
-      "type": "pwa-node",
+      "name": "ts-node",
+      "type": "node",
       "request": "launch",
-      "program": "${file}",
-      "runtimeExecutable": "deno",
-      "runtimeArgs": ["run", "--inspect-brk=127.0.0.1:9229", "-A"],
-      "outputCapture": "std",
-      "attachSimplePort": 9229
+      "args": ["${file}"],
+      "cwd": "${workspaceRoot}",
+      "protocol": "inspector",
+      "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
+      "sourceMaps": true,
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen"
     }
   ]
 }
