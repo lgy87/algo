@@ -1,4 +1,4 @@
-import tree from "./tree"
+import tree from "./Tree"
 
 test("可以构建空树", () => {
   expect(tree([])).toEqual(tree.empty)
