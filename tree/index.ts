@@ -1,5 +1,5 @@
-import tree from "./Tree"
+import Tree from "./Tree"
 
-export { default as treeNode } from "./TreeNode"
-export { tree }
-export default tree
+export { default as TreeNode } from "./TreeNode"
+export { Tree }
+export default Tree

@@ -1,3 +1,4 @@
+import * as r from "ramda"
 import * as ra from "ramda-adjunct"
 
 const LEFT_PARENTHESIS_WIDTH = 1
@@ -16,6 +17,10 @@ export default class TreeNode<T> {
   width() {
     const realWidth = ra.isUndefined(this.value) ? 0 : String(this.value).length
     return realWidth + PARENTHESIS_WIDTH
+  }
+
+  isEmpty() {
+    return r.isNil(this.value) || this === TreeNode.empty
   }
 
   toString() {
