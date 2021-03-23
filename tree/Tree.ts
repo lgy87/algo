@@ -42,6 +42,10 @@ export default class Tree<T> {
     return new Tree(root, left, right)
   }
 
+  static isEmpty<T>(tree: Tree<T | undefined> | undefined) {
+    return ra.isUndefined(tree) || tree.isEmpty()
+  }
+
   height(): number {
     if (ra.isNotUndefined(this.height_)) return this.height_!
     if (this.isLeafOrEmpty()) return (this.height_ = 0)
@@ -65,6 +69,7 @@ export default class Tree<T> {
   // (输出的时候，因为自身有宽度，所以还要计算向左的偏移)
   pos(): number {
     if (ra.isNotUndefined(this.pos_)) return this.pos_!
+
     return (this.pos_ = this.width() / 2)
   }
 
@@ -75,19 +80,18 @@ export default class Tree<T> {
   isLeaf(): boolean {
     if (ra.isNotUndefined(this.isLeaf_)) return this.isLeaf_!
 
+    const leftChildTreeEmpty = ra.isUndefined(this.left) || this.left?.isEmpty()
+    const rightChildTreeEmpty =
+      ra.isUndefined(this.right) || this.right?.isEmpty()
+
     return (this.isLeaf_ =
-      r.not(this.value.isEmpty()) &&
-      !!this.left?.isEmpty() &&
-      !!this.right?.isEmpty())
+      r.not(this.value.isEmpty()) && leftChildTreeEmpty && rightChildTreeEmpty)
   }
 
   isEmpty(): boolean {
     if (ra.isNotUndefined(this.isEmpty_)) return this.isEmpty_!
 
-    const leftChildTreeEmpty = r.isNil(this.left) || this.left?.isEmpty()
-    const rightChildTreeEmpty = r.isNil(this.right) || this.right?.isEmpty()
-
-    return this.value.isEmpty() && leftChildTreeEmpty && rightChildTreeEmpty
+    return (this.isEmpty_ = this.value.isEmpty())
   }
 
   toString() {
@@ -95,12 +99,37 @@ export default class Tree<T> {
 
     const whitespace = " ".repeat(this.pos() - this.value.width() / 2)
     console.log(whitespace, this.value.toString())
+  }
 
-    this.left?.toString()
-    this.right?.toString()
+  iterator() {
+    if (this.isEmpty()) return
+
+    const queue = [] as Array<Tree<T | undefined>>
+    queue.push(this)
+
+    const result = []
+    while (queue.length) {
+      const level = []
+      const count = queue.length
+
+      for (let i = 0; i < count; i++) {
+        const head = r.head(queue)!
+        if (!Tree.isEmpty(head.left)) queue.push(head.left!)
+        if (!Tree.isEmpty(head.right)) queue.push(head.right!)
+        // level.push(queue.shift()?.value.toString())
+        const x = queue.shift()
+        level.push(x?.value.toString())
+
+        const whitespace = " ".repeat(x!?.pos() - x!.value.width() / 2)
+        console.log(whitespace, x!.value.toString())
+      }
+
+      result.push(level)
+    }
+    // console.log(result)
   }
 }
 
-const t = Tree.from([1, 2, 3, 4, 5, 6])
-console.log(t.width())
-t.toString()
+const t = Tree.from([1, 2, 3, 4, 5, 6, 7, 8, 9])
+// console.log(t.width())
+t.iterator()
