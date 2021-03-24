@@ -118,15 +118,13 @@ export default class Tree<T> {
         if (!Tree.isEmpty(head.right)) queue.push(head.right!)
         // level.push(queue.shift()?.value.toString())
         const x = queue.shift()
-        level.push(x?.value.toString())
-
         const whitespace = " ".repeat(x!?.pos() - x!.value.width() / 2)
-        console.log(whitespace, x!.value.toString())
+        level.push(whitespace + x!.value.toString())
       }
 
       result.push(level)
     }
-    // console.log(result)
+    result.forEach(arr => console.log(arr.join("")))
   }
 }
 
