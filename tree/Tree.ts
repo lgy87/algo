@@ -57,12 +57,16 @@ export default class Tree<T> {
 
   width(): number {
     if (ra.isNotUndefined(this.width_)) return this.width_!
-    if (this.isLeafOrEmpty()) return (this.width_ = this.value.width())
+    if (this.isLeafOrEmpty()) return (this.width_ = this.nodeWidth())
 
     return (this.width_ =
       (this.left?.width() || RESERVE_WIDTH) +
       (this.right?.width() || RESERVE_WIDTH) +
       GAP_WIDTH)
+  }
+
+  nodeWidth(): number {
+    return this.value.width()
   }
 
   // 约定：pos 是该节点 横向中心点 的位置
@@ -95,39 +99,47 @@ export default class Tree<T> {
   }
 
   toString() {
-    if (this.isLeafOrEmpty()) return console.log(this.value.toString())
+    if (this.isLeafOrEmpty()) return this.value.toString()
 
-    const whitespace = " ".repeat(this.pos() - this.value.width() / 2)
-    console.log(whitespace, this.value.toString())
+    const tree = this.bfs()
+    const root = tree[0][0]
+    const ls = [root?.value.toString()]
+    if ()
+
+    const l = tree[3]
+    l?.forEach(x => console.log((x as any).nodeWidth()))
+    // const whitespace = " ".repeat(this.pos() - this.value.width() / 2)
+    // console.log(whitespace, this.value.toString())
   }
 
-  iterator() {
-    if (this.isEmpty()) return
+  // 广度搜索算法，返回按层遍历的数组
+  bfs(): Array<Array<Tree<T | undefined> | undefined>> {
+    if (this.isEmpty()) return []
 
     const queue = [] as Array<Tree<T | undefined>>
     queue.push(this)
 
     const result = []
-    while (queue.length) {
+    let index = 0
+    while (queue.length && index++ <= this.height()) {
       const level = []
       const count = queue.length
 
       for (let i = 0; i < count; i++) {
         const head = r.head(queue)!
-        if (!Tree.isEmpty(head.left)) queue.push(head.left!)
-        if (!Tree.isEmpty(head.right)) queue.push(head.right!)
-        // level.push(queue.shift()?.value.toString())
-        const x = queue.shift()
-        const whitespace = " ".repeat(x!?.pos() - x!.value.width() / 2)
-        level.push(whitespace + x!.value.toString())
+
+        queue.push(Tree.isEmpty(head.left) ? Tree.empty : head.left!)
+        queue.push(Tree.isEmpty(head.right) ? Tree.empty : head.right!)
+        level.push(queue.shift())
       }
 
       result.push(level)
     }
-    result.forEach(arr => console.log(arr.join("")))
+
+    return result
   }
 }
 
-const t = Tree.from([1, 2, 3, 4, 5, 6, 7, 8, 9])
-// console.log(t.width())
-t.iterator()
+const t = Tree.from([1, 2, 3, 4, 5, 6, 7, 8])
+
+console.log(t.toString())

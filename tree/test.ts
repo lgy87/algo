@@ -51,9 +51,11 @@ test("可以显示只有一个节点的树", () => {
 })
 
 test("可以显示有两个节点的树", () => {
-  expect(Tree.from([1, 2]).toString()).toBe(`
+  expect(Tree.from([1, 2]).toString()).toBe(
+    `
   (1)
   / \
  (2)(3)
-  `)
+  `.trim(),
+  )
 })
