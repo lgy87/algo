@@ -32,5 +32,3 @@ export default function bigAdd(lhs: string, rhs: string) {
 
   return result.reverse().join("")
 }
-
-bigAdd("42", "9")
